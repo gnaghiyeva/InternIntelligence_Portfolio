@@ -1,5 +1,6 @@
 package org.example.internintelligence_portfolio.services.impl;
 
+import org.example.internintelligence_portfolio.dtos.authdtos.LoginDto;
 import org.example.internintelligence_portfolio.dtos.authdtos.RegisterDto;
 import org.example.internintelligence_portfolio.models.Role;
 import org.example.internintelligence_portfolio.models.User;
@@ -79,6 +80,19 @@ public class UserServiceImpl implements UserService {
         if (!myTargetUser.getRoles().contains(adminRole)) {
             myTargetUser.getRoles().add(adminRole);
             userRepository.save(myTargetUser);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean login(LoginDto loginDto) {
+        User user = userRepository.findByEmail(loginDto.getEmail());
+        if(user==null){
+            return false;
+        }
+        if(bCryptPasswordEncoder.matches(loginDto.getPassword(), user.getPassword())){
+            userRepository.save(user);
             return true;
         }
         return false;
