@@ -1,4 +1,4 @@
-package org.example.internintelligence_portfolio.dtos.maindtos;
+package org.example.internintelligence_portfolio.dtos.projectdtos;
 
 import lombok.Getter;
 import lombok.Setter;

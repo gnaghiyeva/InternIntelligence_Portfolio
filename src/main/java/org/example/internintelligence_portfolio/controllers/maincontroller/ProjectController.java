@@ -1,8 +1,8 @@
 package org.example.internintelligence_portfolio.controllers.maincontroller;
 
-import org.example.internintelligence_portfolio.dtos.maindtos.ProjectCreateDto;
-import org.example.internintelligence_portfolio.dtos.maindtos.ProjectDto;
-import org.example.internintelligence_portfolio.dtos.maindtos.ProjectUpdateDto;
+import org.example.internintelligence_portfolio.dtos.projectdtos.ProjectCreateDto;
+import org.example.internintelligence_portfolio.dtos.projectdtos.ProjectDto;
+import org.example.internintelligence_portfolio.dtos.projectdtos.ProjectUpdateDto;
 import org.example.internintelligence_portfolio.payloads.ApiResponse;
 import org.example.internintelligence_portfolio.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,9 @@
 package org.example.internintelligence_portfolio.services.impl;
 
 
-import org.example.internintelligence_portfolio.dtos.maindtos.ProjectCreateDto;
-import org.example.internintelligence_portfolio.dtos.maindtos.ProjectDto;
-import org.example.internintelligence_portfolio.dtos.maindtos.ProjectUpdateDto;
+import org.example.internintelligence_portfolio.dtos.projectdtos.ProjectCreateDto;
+import org.example.internintelligence_portfolio.dtos.projectdtos.ProjectDto;
+import org.example.internintelligence_portfolio.dtos.projectdtos.ProjectUpdateDto;
 import org.example.internintelligence_portfolio.models.Project;
 import org.example.internintelligence_portfolio.payloads.ApiResponse;
 import org.example.internintelligence_portfolio.repositories.ProjectRepository;
