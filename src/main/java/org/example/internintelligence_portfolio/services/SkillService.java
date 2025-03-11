@@ -10,7 +10,7 @@ import java.util.List;
 public interface SkillService {
     ApiResponse addSkill(SkillCreateDto skillCreateDto);
     List<SkillDto> getAllSkills();
-    SkillDto getSkillById(int id);
+    ApiResponse getSkillById(int id);
     ApiResponse updateSkill(Integer id, SkillUpdateDto skillUpdateDto);
     ApiResponse deleteSkill(Integer id);
 }

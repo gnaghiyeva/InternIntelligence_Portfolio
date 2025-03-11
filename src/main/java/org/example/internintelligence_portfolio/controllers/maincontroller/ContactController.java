@@ -35,9 +35,9 @@ public class ContactController {
     }
 
     @GetMapping(value = "/id")
-    public ContactDto getContactById(@RequestParam Long id) {
-        ContactDto contactDetail = contactService.getContactById(id);
-        return contactDetail;
+    public ResponseEntity<ApiResponse> getContactById(@RequestParam Long id) {
+        ApiResponse contactDetail = contactService.getContactById(id);
+        return ResponseEntity.ok(contactDetail);
     }
 
     @PutMapping(value = "/id",consumes = MediaType.MULTIPART_FORM_DATA_VALUE )

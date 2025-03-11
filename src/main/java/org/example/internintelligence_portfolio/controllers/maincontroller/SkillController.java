@@ -33,9 +33,9 @@ public class SkillController {
     }
 
     @GetMapping(value = "/id")
-    public SkillDto getSkillById(@RequestParam int id){
-        SkillDto skillDetail = skillService.getSkillById(id);
-        return skillDetail;
+    public ResponseEntity<ApiResponse> getSkillById(@RequestParam int id){
+        ApiResponse skillDetail = skillService.getSkillById(id);
+        return ResponseEntity.ok(skillDetail);
     }
 
     @PutMapping(value = "/id",consumes = MediaType.MULTIPART_FORM_DATA_VALUE )

@@ -4,6 +4,7 @@ import org.example.internintelligence_portfolio.dtos.achievementsdtos.Achievemen
 import org.example.internintelligence_portfolio.dtos.achievementsdtos.AchievementDto;
 import org.example.internintelligence_portfolio.dtos.achievementsdtos.AchievementUpdateDto;
 import org.example.internintelligence_portfolio.models.Achievement;
+import org.example.internintelligence_portfolio.models.Project;
 import org.example.internintelligence_portfolio.payloads.ApiResponse;
 import org.example.internintelligence_portfolio.repositories.AchievementRepository;
 import org.example.internintelligence_portfolio.services.AchievementService;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,19 +39,28 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public AchievementDto findAchievementById(Long id) {
-        Achievement achievement = achievementRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Achievement not found with id: " + id));
-        AchievementDto achievementDto = modelMapper.map(achievement, AchievementDto.class);
-        return achievementDto;
+    public ApiResponse findAchievementById(Long id) {
+        Optional<Achievement> optionalAchievement = achievementRepository.findById(id);
+
+        if (optionalAchievement.isEmpty()) {
+            return new ApiResponse(false, "Achievement not found with id: " + id);
+        }
+        AchievementDto achievementDto = modelMapper.map(optionalAchievement.get(), AchievementDto.class);
+        return new ApiResponse(true, "Achievement found: ", achievementDto);
     }
 
     @Override
     public ApiResponse updateAchievementById(Long id, AchievementUpdateDto achievementUpdateDto) {
-        Achievement achievement = achievementRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Achievement not found with id: " + id));
-        if(achievementUpdateDto.getTitle() != null || !achievementUpdateDto.getTitle().isEmpty()){
+        Optional<Achievement> optionalAchievement = achievementRepository.findById(id);
+
+        if (optionalAchievement.isEmpty()) {
+            return new ApiResponse(false, "Achievement not found with id: " + id);
+        }
+        Achievement achievement = optionalAchievement.get();
+        if(achievementUpdateDto.getTitle() != null && !achievementUpdateDto.getTitle().isEmpty() && !achievementUpdateDto.getTitle().isBlank()){
             achievement.setTitle(achievementUpdateDto.getTitle());
         }
-        if(achievementUpdateDto.getDescription() != null || !achievementUpdateDto.getDescription().isEmpty()){
+        if(achievementUpdateDto.getDescription() != null && !achievementUpdateDto.getDescription().isEmpty() && !achievementUpdateDto.getDescription().isBlank()){
             achievement.setDescription(achievementUpdateDto.getDescription());
         }
         if (achievementUpdateDto.getDate() != null) {
@@ -62,8 +73,11 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     public ApiResponse deleteAchievement(Long id) {
-        Achievement achievement = achievementRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Achievement not found with id: " + id));
-        achievementRepository.delete(achievement);
+        Optional<Achievement> optionalAchievement = achievementRepository.findById(id);
+        if (optionalAchievement.isEmpty()) {
+            return new ApiResponse(false, "Achievement not found with id: " + id);
+        }
+        achievementRepository.delete(optionalAchievement.get());
         return new ApiResponse(true, "Achievement deleted");
     }
 }

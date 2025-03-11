@@ -4,6 +4,7 @@ import org.example.internintelligence_portfolio.dtos.contactdtos.ContactCreateDt
 import org.example.internintelligence_portfolio.dtos.contactdtos.ContactDto;
 import org.example.internintelligence_portfolio.dtos.contactdtos.ContactUpdateDto;
 import org.example.internintelligence_portfolio.models.Contact;
+import org.example.internintelligence_portfolio.models.Project;
 import org.example.internintelligence_portfolio.payloads.ApiResponse;
 import org.example.internintelligence_portfolio.repositories.ContactRepository;
 import org.example.internintelligence_portfolio.services.ContactService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,22 +40,32 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public ContactDto getContactById(Long id) {
-        Contact contact = contactRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Contact not found with id: " + id));
-        ContactDto contactDto = modelMapper.map(contact, ContactDto.class);
-        return contactDto;
+    public ApiResponse getContactById(Long id) {
+        Optional<Contact> optionalContact = contactRepository.findById(id);
+
+        if (optionalContact.isEmpty()) {
+            return new ApiResponse(false, "Project not found with id: " + id);
+        }
+        ContactDto contactDto = modelMapper.map(optionalContact, ContactDto.class);
+        return new ApiResponse(true,"Contact found ", contactDto);
     }
 
     @Override
     public ApiResponse updateContactById(Long id, ContactUpdateDto contactUpdateDto) {
-       Contact contact = contactRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Contact not found with id: " + id));
-       if(contactUpdateDto.getFullName() != null || !contactUpdateDto.getFullName().isEmpty()){
+        Optional<Contact> optionalContact = contactRepository.findById(id);
+
+        if (optionalContact.isEmpty()) {
+            return new ApiResponse(false, "Project not found with id: " + id);
+        }
+        Contact contact = optionalContact.get();
+
+       if(contactUpdateDto.getFullName() != null && !contactUpdateDto.getFullName().isEmpty() && !contactUpdateDto.getFullName().isBlank()){
            contact.setFullName(contactUpdateDto.getFullName());
        }
-        if(contactUpdateDto.getEmail() != null || !contactUpdateDto.getEmail().isEmpty()){
+        if(contactUpdateDto.getEmail() != null && !contactUpdateDto.getEmail().isEmpty() && !contactUpdateDto.getEmail().isBlank()){
             contact.setEmail(contactUpdateDto.getEmail());
         }
-        if(contactUpdateDto.getMessage() != null || !contactUpdateDto.getMessage().isEmpty()){
+        if(contactUpdateDto.getMessage() != null && !contactUpdateDto.getMessage().isEmpty() && !contactUpdateDto.getMessage().isBlank()){
             contact.setMessage(contactUpdateDto.getMessage());
         }
 
@@ -63,8 +75,12 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public ApiResponse deleteContact(Long id) {
-        Contact contact = contactRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Contact not found with id: " + id));
-        contactRepository.delete(contact);
+        Optional<Contact> optionalContact = contactRepository.findById(id);
+
+        if (optionalContact.isEmpty()) {
+            return new ApiResponse(false, "Project not found with id: " + id);
+        }
+        contactRepository.delete(optionalContact.get());
         return new ApiResponse(true, "Contact deleted");
     }
 }

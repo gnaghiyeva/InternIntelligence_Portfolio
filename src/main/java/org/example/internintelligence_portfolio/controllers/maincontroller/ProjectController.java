@@ -32,9 +32,9 @@ public class ProjectController {
     }
 
     @GetMapping(value = "/id")
-    public ProjectDto getProjectById(@RequestParam Long id) {
-        ProjectDto projectDetail = projectService.findProjectById(id);
-        return projectDetail;
+    public ResponseEntity<ApiResponse> getProjectById(@RequestParam Long id) {
+        ApiResponse projectDetail = projectService.findProjectById(id);
+        return ResponseEntity.ok(projectDetail);
     }
 
     @PutMapping(value = "/id",consumes = MediaType.MULTIPART_FORM_DATA_VALUE )

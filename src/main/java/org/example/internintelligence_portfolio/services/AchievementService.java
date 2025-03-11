@@ -10,7 +10,7 @@ import java.util.List;
 public interface AchievementService {
     ApiResponse createAchievement(AchievementCreateDto achievementCreateDto);
     List<AchievementDto> getAchievements();
-    AchievementDto findAchievementById(Long id);
+    ApiResponse findAchievementById(Long id);
     ApiResponse updateAchievementById(Long id, AchievementUpdateDto achievementUpdateDto);
     ApiResponse deleteAchievement(Long id);
 }

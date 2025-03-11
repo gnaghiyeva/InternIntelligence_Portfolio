@@ -10,7 +10,7 @@ import java.util.List;
 public interface ContactService {
     ApiResponse createContact(ContactCreateDto contactCreateDto);
     List<ContactDto> getAllContacts();
-    ContactDto getContactById(Long id);
+    ApiResponse getContactById(Long id);
     ApiResponse updateContactById(Long id, ContactUpdateDto contactUpdateDto);
     ApiResponse deleteContact(Long id);
 }

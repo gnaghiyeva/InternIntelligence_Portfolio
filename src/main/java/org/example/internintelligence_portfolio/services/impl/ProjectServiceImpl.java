@@ -10,9 +10,12 @@ import org.example.internintelligence_portfolio.repositories.ProjectRepository;
 import org.example.internintelligence_portfolio.services.ProjectService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,22 +41,34 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDto findProjectById(Long id) {
-        Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project not found with id: " + id));
-        ProjectDto projectDto = modelMapper.map(project,ProjectDto.class);
-        return projectDto;
+    public ApiResponse findProjectById(Long id) {
+        Optional<Project> optionalProject = projectRepository.findById(id);
+
+        if (optionalProject.isEmpty()) {
+            return new ApiResponse(false, "Project not found with id: " + id);
+        }
+
+        ProjectDto projectDto = modelMapper.map(optionalProject.get(), ProjectDto.class);
+        return new ApiResponse(true, "Project found", projectDto);
     }
+
 
     @Override
     public ApiResponse updateProjectById(Long id, ProjectUpdateDto projectUpdateDto) {
-        Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project not found with id: " + id));
-        if (projectUpdateDto.getTitle() != null || !projectUpdateDto.getTitle().isEmpty()) {
+        Optional<Project> optionalProject = projectRepository.findById(id);
+
+        if (optionalProject.isEmpty()) {
+            return new ApiResponse(false, "Project not found with id: " + id);
+        }
+        Project project = optionalProject.get();
+
+        if (projectUpdateDto.getTitle() != null && !projectUpdateDto.getTitle().isEmpty() && !projectUpdateDto.getTitle().isBlank()) {
             project.setTitle(projectUpdateDto.getTitle());
         }
-        if (projectUpdateDto.getDescription() != null || !projectUpdateDto.getDescription().isEmpty()) {
+        if (projectUpdateDto.getDescription() != null && !projectUpdateDto.getDescription().isEmpty() && !projectUpdateDto.getDescription().isBlank()) {
             project.setDescription(projectUpdateDto.getDescription());
         }
-        if (projectUpdateDto.getUrl() != null || !projectUpdateDto.getUrl().isEmpty()) {
+        if (projectUpdateDto.getUrl() != null && !projectUpdateDto.getUrl().isEmpty() && !projectUpdateDto.getUrl().isBlank()) {
             project.setUrl(projectUpdateDto.getUrl());
         }
         if (projectUpdateDto.getStartDate() != null) {
@@ -68,8 +83,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ApiResponse deleteProject(Long id) {
-        Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project not found with id: " + id));
-        projectRepository.delete(project);
-        return new ApiResponse(true, "Project deleted");
+        Optional<Project> optionalProject = projectRepository.findById(id);
+        if (optionalProject.isEmpty()) {
+            return new ApiResponse(false, "Project not found with id: " + id);
+        }
+        projectRepository.delete(optionalProject.get());
+        return new ApiResponse(true, "Project deleted successfully");
     }
+
 }

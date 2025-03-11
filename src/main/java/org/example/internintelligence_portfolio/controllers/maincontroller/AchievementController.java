@@ -33,9 +33,9 @@ public class AchievementController {
     }
 
     @GetMapping(value = "/id")
-    public AchievementDto getAchievementById(Long id){
-        AchievementDto achievementDetail = achievementService.findAchievementById(id);
-        return achievementDetail;
+    public ResponseEntity<ApiResponse> getAchievementById(Long id){
+        ApiResponse achievementDetail = achievementService.findAchievementById(id);
+        return ResponseEntity.ok(achievementDetail);
     }
 
     @PutMapping(value = "/id", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
